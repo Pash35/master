@@ -1,0 +1,30 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    username: root
+    password: testtest
+    url: jdbc:mysql://localhost:3306/search_engine?useSSL=false&requireSSL=false&allowPublicKeyRetrieval=true
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+# example values
+
+indexing-settings:
+  sites:
+    - url: https://lenta.ru/
+      name: Лента.ру
+    - url: http://www.playback.ru/
+      name: PlayBack.Ru
+    - url: https://volochek.life/
+      name: Volochek
+    - url: https://radiomv.ru/
+      name: RadioMV
+    - url: https://ipfran.ru/
+      name: Ipfran
+

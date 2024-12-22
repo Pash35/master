@@ -3,7 +3,6 @@ package searchengine.config;
 
 import org.apache.lucene.morphology.LuceneMorphology;
 import org.apache.lucene.morphology.russian.RussianLuceneMorphology;
-import org.jsoup.Jsoup;
 
 import java.io.IOException;
 import java.util.*;
@@ -23,7 +22,7 @@ public class LemmasFromText {
                     luceneMorph.getNormalForms(word);
         }
         catch (Exception e) {
-            e.getMessage();
+            new LemmaErrorLogger("Class ' LuceneMorphology' returned an error in word - " + word);
             return new ArrayList<>();
         }
         return  wordBaseForms;
@@ -48,6 +47,7 @@ public class LemmasFromText {
                         luceneMorph.getMorphInfo(word);
             }
             catch (Exception e) {
+                new LemmaErrorLogger("Class ' LuceneMorphology' returned an error in word - " + word);
                 continue;
             }
 
@@ -78,10 +78,5 @@ public class LemmasFromText {
         return false;
     }
 
-
-
-    public String removeHtml(String html) {
-        return Jsoup.parse(html).text();
-    }
 
 }

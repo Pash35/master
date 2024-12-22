@@ -12,13 +12,12 @@ import searchengine.model.SiteEntity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
 public class StatisticsServiceImpl implements StatisticsService {
 
-    private final Random random = new Random();
+
     private final SitesList sites;
     private final PageService pageService;
     private final SiteService siteService;
@@ -26,12 +25,7 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     @Override
     public StatisticsResponse getStatistics() {
-        String[] statuses = { "INDEXED", "FAILED", "INDEXING" };
-        String[] errors = {
-                "Ошибка индексации: главная страница сайта не доступна",
-                "Ошибка индексации: сайт не доступен",
-                ""
-        };
+
         TotalStatistics total = new TotalStatistics();
         List<SiteEntity> siteBaseList = siteService.findSite();//проверка в базе данных
         List<Site> sitesList = new ArrayList<>();
@@ -58,18 +52,13 @@ public class StatisticsServiceImpl implements StatisticsService {
             if (siteEntity != null) {
                 item.setName(site.getName());
                 item.setUrl(site.getUrl());
-                //int pages = random.nextInt(1_000);
                 int pages = pageService.findCountByUrl(site.getUrl());
-                //int lemmas = pages * random.nextInt(1_000);
                 Integer lemmas = lemmaService.findCountByUrl(site.getUrl());
                 item.setPages(pages);
                 item.setLemmas(lemmas);
-
-                //item.setStatus(statuses[i % 3]);
                 item.setStatus(siteEntity.getStatus().toString());
                 item.setError(siteEntity.getLastError());
-                item.setStatusTime(System.currentTimeMillis() -
-                        (random.nextInt(10_000)));
+                item.setStatusTime(System.currentTimeMillis());
                 total.setPages(total.getPages() + pages);
                 total.setLemmas(total.getLemmas() + lemmas);
                 detailed.add(item);

@@ -1,12 +1,12 @@
 package searchengine.services;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import searchengine.config.LemmaErrorLogger;
 import searchengine.config.LemmasFromText;
 import searchengine.config.Site;
 import searchengine.model.*;
-import searchengine.repositories.IndexRepository;
 import searchengine.repositories.LemmaRepository;
 import searchengine.repositories.PageRepository;
 import searchengine.repositories.SiteRepository;
@@ -21,7 +21,6 @@ public class SiteService {
     private final SiteRepository siteRepository;
     private final PageRepository pageRepository;
     private final LemmaRepository lemmaRepository;
-    private final IndexRepository indexRepository;
 
     List<SiteEntity> findSite()  {
         return siteRepository.findSite();
@@ -33,18 +32,11 @@ public class SiteService {
     public void deleteByUrl(String url) {
         siteRepository.deleteByUrl(url);
     }
-    public List<SiteEntity> findByLemma(String query) {
-        return siteRepository.findByLemma(query);
-    }
-
     public Optional<SiteEntity> getById(Integer id) {
         return siteRepository.findById(id);
     }
 
 
-    public Collection<SiteEntity> getAll() {
-        return siteRepository.findAll();
-    }
 
     //Создаем запись в таблице site
     public void create(Site item) {
@@ -99,8 +91,7 @@ public class SiteService {
                 }
 
             } catch (IOException e) {
-                e.printStackTrace();
-
+                new LemmaErrorLogger("Error in class SiteService");
             }
 
             pageList.add(entry.getValue());
@@ -127,8 +118,7 @@ public class SiteService {
             for(LemmaEntity templemma: lemmaList) {
                 for (Map.Entry<String, HashMap<String, Integer>> tempIndex : lemmaRank.entrySet()) {
 
-
-                        for (Map.Entry<String, Integer> temp : tempIndex.getValue().entrySet()) {
+                     for (Map.Entry<String, Integer> temp : tempIndex.getValue().entrySet()) {
                             if(tempIndex.getKey().equals(tempPage.getPath()) && temp.getKey().equals(templemma.getLemma())) {
                                 IndexEntity index = new IndexEntity();
                                 index.setRanks((float)temp.getValue()/ templemma.getFrequency() );
@@ -136,7 +126,7 @@ public class SiteService {
                                 index.setPageId(tempPage);
                                 indexList.add(index);
                             }
-                        }
+                     }
                 }
                 templemma.setIndexes(indexList);
             }

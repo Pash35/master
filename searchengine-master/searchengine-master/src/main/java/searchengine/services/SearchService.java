@@ -3,6 +3,7 @@ package searchengine.services;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import searchengine.config.LemmaErrorLogger;
 import searchengine.config.LemmasFromText;
 import searchengine.dto.search.SearchData;
 import searchengine.dto.search.SearchResponse;
@@ -24,7 +25,7 @@ public class SearchService {
     private final IndexsServise indexsServise;
     private final int maxFrequency = 30;
 
-    public SearchResponse search (String query, int offset, int limit, String site) throws IOException {
+    public SearchResponse search (String query, int offset, int limit, String site)  {
         SearchResponse response = new SearchResponse();//ответный класс
         List<SearchData> dataList = new ArrayList<>();//список классов
         List<Integer> listIdPage = new ArrayList<>();//список ид страниц, на которых присутствуют леммы из запроса
@@ -137,7 +138,7 @@ public class SearchService {
             }
 
         } catch (Exception e) {
-            e.getMessage();
+            new LemmaErrorLogger("Error in class SearchService");
         }
         return response;
     }

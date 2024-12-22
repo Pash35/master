@@ -3,7 +3,6 @@ package searchengine.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import searchengine.repositories.IndexRepository;
-import searchengine.repositories.PageRepository;
 
 @Service
 @RequiredArgsConstructor

@@ -6,10 +6,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-<<<<<<< HEAD
 import searchengine.logger.ExceptionLogger;
-=======
->>>>>>> c50fbabb287430063d38ef8b6a33f7a3358b3beb
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -18,16 +15,8 @@ import static java.lang.Thread.sleep;
 
 public class WebParse {
 
-<<<<<<< HEAD
     private String url ;
 
-=======
-    private Document doc;
-    public String url ;
-    //private String regex = "[^#]+";//кроме внутренней ссылки
-    private String regex = "[A-z0-9.]+/?";
-    private HashSet<String> refList = new HashSet<>();
->>>>>>> c50fbabb287430063d38ef8b6a33f7a3358b3beb
     @Getter
     private StringBuffer content = new StringBuffer();
     @Getter
@@ -44,17 +33,12 @@ public class WebParse {
         // https://skillbox.ru/[A-z0-9]+/?
         // следующий поток -> https://skillbox.ru/courses/[A-z0-9]+/?
         // и т.д.
-<<<<<<< HEAD
         String regex = "[A-z0-9.]+/?";
         HashSet<String> refList = new HashSet<>();
         Document doc;
         Elements elements;
 
         regex = url + regex;
-=======
-        regex = url + regex;
-        Elements elements;
->>>>>>> c50fbabb287430063d38ef8b6a33f7a3358b3beb
 
         try {
             sleep(150);
@@ -79,15 +63,8 @@ public class WebParse {
             code = response.statusCode();
             content.append(doc.html());
 
-<<<<<<< HEAD
         } catch (InterruptedException | IOException i) {
             new ExceptionLogger("Interrupted in class WebParse");
-=======
-        } catch (InterruptedException i) {
-            i.getStackTrace();
-        } catch (IOException io) {
-            io.getStackTrace();
->>>>>>> c50fbabb287430063d38ef8b6a33f7a3358b3beb
         }
         return refList;
     }

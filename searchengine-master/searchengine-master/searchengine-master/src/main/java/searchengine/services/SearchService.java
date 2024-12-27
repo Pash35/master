@@ -3,24 +3,16 @@ package searchengine.services;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-<<<<<<< HEAD
 import searchengine.logger.ExceptionLogger;
 import searchengine.lemma.LemmasFromText;
-=======
-import searchengine.config.LemmaErrorLogger;
-import searchengine.config.LemmasFromText;
->>>>>>> c50fbabb287430063d38ef8b6a33f7a3358b3beb
 import searchengine.dto.search.SearchData;
 import searchengine.dto.search.SearchResponse;
 import searchengine.model.PageEntity;
 import searchengine.model.SiteEntity;
-<<<<<<< HEAD
 import searchengine.repositories.IndexRepository;
 import searchengine.repositories.LemmaRepository;
 import searchengine.repositories.PageRepository;
 import searchengine.repositories.SiteRepository;
-=======
->>>>>>> c50fbabb287430063d38ef8b6a33f7a3358b3beb
 
 import java.io.IOException;
 import java.util.*;
@@ -31,17 +23,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SearchService {
 
-<<<<<<< HEAD
     private final SiteRepository siteRepository;
     private final PageRepository pageRepository;
     private final LemmaRepository lemmaRepository;
     private final IndexRepository indexRepository;
-=======
-    private final SiteService siteService;
-    private final PageService pageService;
-    private final LemmaService lemmaService;
-    private final IndexsServise indexsServise;
->>>>>>> c50fbabb287430063d38ef8b6a33f7a3358b3beb
     private final int maxFrequency = 30;
 
     public SearchResponse search (String query, int offset, int limit, String site)  {
@@ -61,13 +46,8 @@ public class SearchService {
                 //считаем в базе количество страниц где встречается лемма
                 Integer frequency;
                 if (site == null) {
-<<<<<<< HEAD
                      frequency = lemmaRepository.findFrequencyLemma(lemmaTemp);
                 } else frequency = lemmaRepository.findFrequencyLemmaBySiteId(lemmaTemp, site);
-=======
-                     frequency = lemmaService.findFrequencyLemma(lemmaTemp);
-                } else frequency = lemmaService.findFrequencyLemmaBySiteId(lemmaTemp, site);
->>>>>>> c50fbabb287430063d38ef8b6a33f7a3358b3beb
                 //максимум 30, ограничиваем
                 if (frequency != 0 && frequency <= maxFrequency) {
                     //фильтруем по возрастанию количества лемм
@@ -93,22 +73,13 @@ public class SearchService {
 
                     List<Integer> listIdLemmaTemp;
                     if (site == null) {//по всем сайтам ищем ид лемм, иначе по одному
-<<<<<<< HEAD
                        listIdLemmaTemp = lemmaRepository.findIdByLemma(listLemma.get(i));
                     } else listIdLemmaTemp = lemmaRepository.findIdByLemmaAndSiteId(listLemma.get(i), site);
-=======
-                       listIdLemmaTemp =lemmaService.findIdByLemma(listLemma.get(i));
-                    } else listIdLemmaTemp = lemmaService.findIdByLemmaAndSiteId(listLemma.get(i), site);
->>>>>>> c50fbabb287430063d38ef8b6a33f7a3358b3beb
                     listIdLemma.addAll(listIdLemmaTemp);
                     if (!listIdPage.isEmpty()) {//поиск страниц с леммами
                         for (Integer lemmaTemp : listIdLemmaTemp) {
                             //проверяем совпадение страниц от первой леммы
-<<<<<<< HEAD
                             List<Integer> tempInteger = pageRepository.findIdByLemmaId(lemmaTemp);
-=======
-                            List<Integer> tempInteger = pageService.findIdByLemmaId(lemmaTemp);
->>>>>>> c50fbabb287430063d38ef8b6a33f7a3358b3beb
                             for (Integer tempIn : tempInteger) {
                                 if (!listIdPage.contains(tempIn)) {
                                     listIdPage.add(tempIn);
@@ -118,31 +89,18 @@ public class SearchService {
                     } else {
                         //поиск страниц по первой лемме
                         for (Integer lemmaTemp : listIdLemmaTemp) {
-<<<<<<< HEAD
                             listIdPage.addAll(pageRepository.findIdByLemmaId(lemmaTemp));
-=======
-                            listIdPage.addAll(pageService.findIdByLemmaId(lemmaTemp));
->>>>>>> c50fbabb287430063d38ef8b6a33f7a3358b3beb
                         }
                     }
                 }
                 //формируем ответ
                 for (Integer tempPage : listIdPage) {
-<<<<<<< HEAD
                     PageEntity page = pageRepository.findByIdField(tempPage);
                     SiteEntity siteEntity = siteRepository.findById(page.getSiteId().getId()).get();
                     //заполняем ответный класс
                     SearchData data = new SearchData();
                     String siteUrl = siteEntity.getUrl();
                     data.setSite(siteUrl.substring(0, siteUrl.length() - 1));
-=======
-                    PageEntity page = pageService.findById(tempPage);
-                    SiteEntity siteEntity = siteService.getById(page.getSiteId().getId()).get();
-                    //заполняем ответный класс
-                    SearchData data = new SearchData();
-                    String siteUrl = siteEntity.getUrl();
-                    data.setSite(siteUrl.substring(0,siteUrl.length() - 1));
->>>>>>> c50fbabb287430063d38ef8b6a33f7a3358b3beb
                     data.setUri(page.getPath());
                     data.setSiteName(siteEntity.getName());
                     data.setTitle(titleSite(page.getContent()));//вырезаем title
@@ -150,7 +108,6 @@ public class SearchService {
                     List<Float> ranks = new ArrayList<>();
                     Float rankResult = 0f;
                     for (Integer tempLemma : listIdLemma) {
-<<<<<<< HEAD
                         Float rank = indexRepository.findRanks(tempPage, tempLemma);
                         if (rank != null) {
                             ranks.add(rank);
@@ -159,16 +116,6 @@ public class SearchService {
                     //..и временно записываем в релевантность ответного класса
                     for (Float tempRanks : ranks) {
                         rankResult = rankResult + tempRanks;
-=======
-                        Float rank = indexsServise.findRanksByPageIdAndLemmaId(tempPage, tempLemma);
-                        if (rank != null) {
-                            ranks.add(rank);
-                        } else  ranks.add(0f);
-                    }
-                    //..и временно записываем в релевантность ответного класса
-                    for (Float tempRanks: ranks) {
-                        rankResult  = rankResult  + tempRanks;
->>>>>>> c50fbabb287430063d38ef8b6a33f7a3358b3beb
                     }
                     data.setRelevance(rankResult);
                     relevan = Math.max(relevan, rankResult);//максимальная релевантность
@@ -195,11 +142,7 @@ public class SearchService {
             }
 
         } catch (Exception e) {
-<<<<<<< HEAD
             new ExceptionLogger("Error in class SearchService");
-=======
-            new LemmaErrorLogger("Error in class SearchService");
->>>>>>> c50fbabb287430063d38ef8b6a33f7a3358b3beb
         }
         return response;
     }

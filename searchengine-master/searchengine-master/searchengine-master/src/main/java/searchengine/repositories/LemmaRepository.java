@@ -19,12 +19,6 @@ public interface LemmaRepository extends JpaRepository<LemmaEntity, Integer> {
     @Query(value = "SELECT count(*) FROM lemma WHERE site_id = (SELECT id FROM site WHERE url = ?1%)", nativeQuery = true)
     Integer findCountByUrl(String url);
 
-<<<<<<< HEAD
-=======
-    @Query(value = "SELECT * FROM lemma WHERE lemma = ?1%", nativeQuery = true)
-    List<LemmaEntity> findByLemma(String query);
-
->>>>>>> c50fbabb287430063d38ef8b6a33f7a3358b3beb
     @Query(value = "SELECT * FROM lemma WHERE site_id = ?1%", nativeQuery = true)
     List<LemmaEntity> findBySiteId(int id);
     @Query(value = "SELECT CASE WHEN SUM(frequency) IS NULL THEN 0 ELSE SUM(frequency) END FROM lemma WHERE lemma = ?1%", nativeQuery = true)

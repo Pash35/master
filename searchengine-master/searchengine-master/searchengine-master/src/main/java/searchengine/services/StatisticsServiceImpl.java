@@ -9,12 +9,9 @@ import searchengine.dto.statistics.StatisticsData;
 import searchengine.dto.statistics.StatisticsResponse;
 import searchengine.dto.statistics.TotalStatistics;
 import searchengine.model.SiteEntity;
-<<<<<<< HEAD
 import searchengine.repositories.LemmaRepository;
 import searchengine.repositories.PageRepository;
 import searchengine.repositories.SiteRepository;
-=======
->>>>>>> c50fbabb287430063d38ef8b6a33f7a3358b3beb
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,25 +22,15 @@ public class StatisticsServiceImpl implements StatisticsService {
 
 
     private final SitesList sites;
-<<<<<<< HEAD
     private final PageRepository pageRepository;
     private final SiteRepository siteRepository;
     private final LemmaRepository lemmaRepository;
-=======
-    private final PageService pageService;
-    private final SiteService siteService;
-    private final LemmaService lemmaService;
->>>>>>> c50fbabb287430063d38ef8b6a33f7a3358b3beb
 
     @Override
     public StatisticsResponse getStatistics() {
 
         TotalStatistics total = new TotalStatistics();
-<<<<<<< HEAD
         List<SiteEntity> siteBaseList = siteRepository.findSite();//проверка в базе данных
-=======
-        List<SiteEntity> siteBaseList = siteService.findSite();//проверка в базе данных
->>>>>>> c50fbabb287430063d38ef8b6a33f7a3358b3beb
         List<Site> sitesList = new ArrayList<>();
 
         if (siteBaseList.isEmpty()) {
@@ -64,21 +51,12 @@ public class StatisticsServiceImpl implements StatisticsService {
         for(int i = 0; i < sitesList.size(); i++) {
             Site site = sitesList.get(i);
             DetailedStatisticsItem item = new DetailedStatisticsItem();
-<<<<<<< HEAD
             SiteEntity siteEntity = siteRepository.findByUrl(site.getUrl());
             if (siteEntity != null) {
                 item.setName(site.getName());
                 item.setUrl(site.getUrl());
                 int pages = pageRepository.findCountByUrl(site.getUrl());
                 Integer lemmas = lemmaRepository.findCountByUrl(site.getUrl());
-=======
-            SiteEntity siteEntity = siteService.findByUrl(site.getUrl());
-            if (siteEntity != null) {
-                item.setName(site.getName());
-                item.setUrl(site.getUrl());
-                int pages = pageService.findCountByUrl(site.getUrl());
-                Integer lemmas = lemmaService.findCountByUrl(site.getUrl());
->>>>>>> c50fbabb287430063d38ef8b6a33f7a3358b3beb
                 item.setPages(pages);
                 item.setLemmas(lemmas);
                 item.setStatus(siteEntity.getStatus().toString());

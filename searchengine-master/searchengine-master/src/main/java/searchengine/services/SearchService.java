@@ -3,12 +3,16 @@ package searchengine.services;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import searchengine.config.LemmaErrorLogger;
-import searchengine.config.LemmasFromText;
+import searchengine.logger.ExceptionLogger;
+import searchengine.lemma.LemmasFromText;
 import searchengine.dto.search.SearchData;
 import searchengine.dto.search.SearchResponse;
 import searchengine.model.PageEntity;
 import searchengine.model.SiteEntity;
+import searchengine.repositories.IndexRepository;
+import searchengine.repositories.LemmaRepository;
+import searchengine.repositories.PageRepository;
+import searchengine.repositories.SiteRepository;
 
 import java.io.IOException;
 import java.util.*;
@@ -19,10 +23,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SearchService {
 
-    private final SiteService siteService;
-    private final PageService pageService;
-    private final LemmaService lemmaService;
-    private final IndexsServise indexsServise;
+    private final SiteRepository siteRepository;
+    private final PageRepository pageRepository;
+    private final LemmaRepository lemmaRepository;
+    private final IndexRepository indexRepository;
     private final int maxFrequency = 30;
 
     public SearchResponse search (String query, int offset, int limit, String site)  {
@@ -42,8 +46,8 @@ public class SearchService {
                 //считаем в базе количество страниц где встречается лемма
                 Integer frequency;
                 if (site == null) {
-                     frequency = lemmaService.findFrequencyLemma(lemmaTemp);
-                } else frequency = lemmaService.findFrequencyLemmaBySiteId(lemmaTemp, site);
+                     frequency = lemmaRepository.findFrequencyLemma(lemmaTemp);
+                } else frequency = lemmaRepository.findFrequencyLemmaBySiteId(lemmaTemp, site);
                 //максимум 30, ограничиваем
                 if (frequency != 0 && frequency <= maxFrequency) {
                     //фильтруем по возрастанию количества лемм
@@ -69,13 +73,13 @@ public class SearchService {
 
                     List<Integer> listIdLemmaTemp;
                     if (site == null) {//по всем сайтам ищем ид лемм, иначе по одному
-                       listIdLemmaTemp =lemmaService.findIdByLemma(listLemma.get(i));
-                    } else listIdLemmaTemp = lemmaService.findIdByLemmaAndSiteId(listLemma.get(i), site);
+                       listIdLemmaTemp = lemmaRepository.findIdByLemma(listLemma.get(i));
+                    } else listIdLemmaTemp = lemmaRepository.findIdByLemmaAndSiteId(listLemma.get(i), site);
                     listIdLemma.addAll(listIdLemmaTemp);
                     if (!listIdPage.isEmpty()) {//поиск страниц с леммами
                         for (Integer lemmaTemp : listIdLemmaTemp) {
                             //проверяем совпадение страниц от первой леммы
-                            List<Integer> tempInteger = pageService.findIdByLemmaId(lemmaTemp);
+                            List<Integer> tempInteger = pageRepository.findIdByLemmaId(lemmaTemp);
                             for (Integer tempIn : tempInteger) {
                                 if (!listIdPage.contains(tempIn)) {
                                     listIdPage.add(tempIn);
@@ -85,18 +89,18 @@ public class SearchService {
                     } else {
                         //поиск страниц по первой лемме
                         for (Integer lemmaTemp : listIdLemmaTemp) {
-                            listIdPage.addAll(pageService.findIdByLemmaId(lemmaTemp));
+                            listIdPage.addAll(pageRepository.findIdByLemmaId(lemmaTemp));
                         }
                     }
                 }
                 //формируем ответ
                 for (Integer tempPage : listIdPage) {
-                    PageEntity page = pageService.findById(tempPage);
-                    SiteEntity siteEntity = siteService.getById(page.getSiteId().getId()).get();
+                    PageEntity page = pageRepository.findByIdField(tempPage);
+                    SiteEntity siteEntity = siteRepository.findById(page.getSiteId().getId()).get();
                     //заполняем ответный класс
                     SearchData data = new SearchData();
                     String siteUrl = siteEntity.getUrl();
-                    data.setSite(siteUrl.substring(0,siteUrl.length() - 1));
+                    data.setSite(siteUrl.substring(0, siteUrl.length() - 1));
                     data.setUri(page.getPath());
                     data.setSiteName(siteEntity.getName());
                     data.setTitle(titleSite(page.getContent()));//вырезаем title
@@ -104,14 +108,14 @@ public class SearchService {
                     List<Float> ranks = new ArrayList<>();
                     Float rankResult = 0f;
                     for (Integer tempLemma : listIdLemma) {
-                        Float rank = indexsServise.findRanksByPageIdAndLemmaId(tempPage, tempLemma);
+                        Float rank = indexRepository.findRanks(tempPage, tempLemma);
                         if (rank != null) {
                             ranks.add(rank);
-                        } else  ranks.add(0f);
+                        } else ranks.add(0f);
                     }
                     //..и временно записываем в релевантность ответного класса
-                    for (Float tempRanks: ranks) {
-                        rankResult  = rankResult  + tempRanks;
+                    for (Float tempRanks : ranks) {
+                        rankResult = rankResult + tempRanks;
                     }
                     data.setRelevance(rankResult);
                     relevan = Math.max(relevan, rankResult);//максимальная релевантность
@@ -138,7 +142,7 @@ public class SearchService {
             }
 
         } catch (Exception e) {
-            new LemmaErrorLogger("Error in class SearchService");
+            new ExceptionLogger("Error in class SearchService");
         }
         return response;
     }

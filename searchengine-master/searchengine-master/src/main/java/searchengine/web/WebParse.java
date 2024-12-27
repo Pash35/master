@@ -6,6 +6,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import searchengine.logger.ExceptionLogger;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -14,11 +15,8 @@ import static java.lang.Thread.sleep;
 
 public class WebParse {
 
-    private Document doc;
-    public String url ;
-    //private String regex = "[^#]+";//кроме внутренней ссылки
-    private String regex = "[A-z0-9.]+/?";
-    private HashSet<String> refList = new HashSet<>();
+    private String url ;
+
     @Getter
     private StringBuffer content = new StringBuffer();
     @Getter
@@ -35,8 +33,12 @@ public class WebParse {
         // https://skillbox.ru/[A-z0-9]+/?
         // следующий поток -> https://skillbox.ru/courses/[A-z0-9]+/?
         // и т.д.
-        regex = url + regex;
+        String regex = "[A-z0-9.]+/?";
+        HashSet<String> refList = new HashSet<>();
+        Document doc;
         Elements elements;
+
+        regex = url + regex;
 
         try {
             sleep(150);
@@ -61,10 +63,8 @@ public class WebParse {
             code = response.statusCode();
             content.append(doc.html());
 
-        } catch (InterruptedException i) {
-            i.getStackTrace();
-        } catch (IOException io) {
-            io.getStackTrace();
+        } catch (InterruptedException | IOException i) {
+            new ExceptionLogger("Interrupted in class WebParse");
         }
         return refList;
     }

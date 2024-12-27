@@ -9,6 +9,9 @@ import searchengine.dto.statistics.StatisticsData;
 import searchengine.dto.statistics.StatisticsResponse;
 import searchengine.dto.statistics.TotalStatistics;
 import searchengine.model.SiteEntity;
+import searchengine.repositories.LemmaRepository;
+import searchengine.repositories.PageRepository;
+import searchengine.repositories.SiteRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,15 +22,15 @@ public class StatisticsServiceImpl implements StatisticsService {
 
 
     private final SitesList sites;
-    private final PageService pageService;
-    private final SiteService siteService;
-    private final LemmaService lemmaService;
+    private final PageRepository pageRepository;
+    private final SiteRepository siteRepository;
+    private final LemmaRepository lemmaRepository;
 
     @Override
     public StatisticsResponse getStatistics() {
 
         TotalStatistics total = new TotalStatistics();
-        List<SiteEntity> siteBaseList = siteService.findSite();//проверка в базе данных
+        List<SiteEntity> siteBaseList = siteRepository.findSite();//проверка в базе данных
         List<Site> sitesList = new ArrayList<>();
 
         if (siteBaseList.isEmpty()) {
@@ -48,12 +51,12 @@ public class StatisticsServiceImpl implements StatisticsService {
         for(int i = 0; i < sitesList.size(); i++) {
             Site site = sitesList.get(i);
             DetailedStatisticsItem item = new DetailedStatisticsItem();
-            SiteEntity siteEntity = siteService.findByUrl(site.getUrl());
+            SiteEntity siteEntity = siteRepository.findByUrl(site.getUrl());
             if (siteEntity != null) {
                 item.setName(site.getName());
                 item.setUrl(site.getUrl());
-                int pages = pageService.findCountByUrl(site.getUrl());
-                Integer lemmas = lemmaService.findCountByUrl(site.getUrl());
+                int pages = pageRepository.findCountByUrl(site.getUrl());
+                Integer lemmas = lemmaRepository.findCountByUrl(site.getUrl());
                 item.setPages(pages);
                 item.setLemmas(lemmas);
                 item.setStatus(siteEntity.getStatus().toString());

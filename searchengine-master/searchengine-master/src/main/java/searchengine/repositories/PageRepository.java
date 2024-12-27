@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import searchengine.model.PageEntity;
-import searchengine.model.SiteEntity;
 
 import java.util.List;
 
@@ -20,7 +19,7 @@ public interface PageRepository extends JpaRepository<PageEntity, Integer> {
     Integer findCountByUrl(String url);
 
     @Query(value = "SELECT * FROM page WHERE id =  ?1%", nativeQuery = true)
-    PageEntity findById(int id);
+    PageEntity findByIdField(int id);
 
     @Query(value = "SELECT * FROM page WHERE site_id =  ?1%", nativeQuery = true)
     List<PageEntity> findBySiteId(int id);

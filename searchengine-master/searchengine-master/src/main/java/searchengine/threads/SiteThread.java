@@ -1,4 +1,4 @@
-package searchengine.config;
+package searchengine.threads;
 
 import lombok.RequiredArgsConstructor;
 import searchengine.model.PageEntity;
@@ -25,7 +25,6 @@ public class SiteThread extends Thread{
     public void run() {
 
         HashMap<String, PageEntity> hashMap = new HashMap<>();
-        long start = System.currentTimeMillis();
         try {
             ForkJoinPool pool = new ForkJoinPool();
             WebMap webMap = new WebMap(ref);
@@ -43,13 +42,9 @@ public class SiteThread extends Thread{
                 }
             }
             siteService.update(ref, hashMap);
-        } catch (IOException io) {
+        } catch (IOException | InterruptedException io) {
             siteService.updateError(ref, io.getMessage());
         }
-        catch (InterruptedException e) {
-            siteService.updateError(ref, e.getMessage());
-        }
-        System.out.println(System.currentTimeMillis() - start);
 
     }
 

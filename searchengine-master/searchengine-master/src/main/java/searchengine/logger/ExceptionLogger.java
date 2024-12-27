@@ -1,13 +1,13 @@
-package searchengine.config;
+package searchengine.logger;
 
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import searchengine.Application;
 
-public class LemmaErrorLogger {
+public class ExceptionLogger {
 
-   public LemmaErrorLogger(String message){
+   public ExceptionLogger(String message){
        Logger logger = LoggerFactory.getLogger(Application.class);
        logger.error(message);
    }

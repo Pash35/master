@@ -3,8 +3,8 @@ package searchengine.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import searchengine.config.LemmaErrorLogger;
-import searchengine.config.LemmasFromText;
+import searchengine.logger.ExceptionLogger;
+import searchengine.lemma.LemmasFromText;
 import searchengine.config.Site;
 import searchengine.model.*;
 import searchengine.repositories.LemmaRepository;
@@ -21,22 +21,6 @@ public class SiteService {
     private final SiteRepository siteRepository;
     private final PageRepository pageRepository;
     private final LemmaRepository lemmaRepository;
-
-    List<SiteEntity> findSite()  {
-        return siteRepository.findSite();
-    }
-    public SiteEntity findByUrl(String url) {
-        return siteRepository.findByUrl(url);
-    }
-
-    public void deleteByUrl(String url) {
-        siteRepository.deleteByUrl(url);
-    }
-    public Optional<SiteEntity> getById(Integer id) {
-        return siteRepository.findById(id);
-    }
-
-
 
     //Создаем запись в таблице site
     public void create(Site item) {
@@ -91,7 +75,7 @@ public class SiteService {
                 }
 
             } catch (IOException e) {
-                new LemmaErrorLogger("Error in class SiteService");
+                new ExceptionLogger("Error in class SiteService");
             }
 
             pageList.add(entry.getValue());

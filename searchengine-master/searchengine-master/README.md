@@ -19,11 +19,8 @@
 
                            Структура проекта (backend)
 1. config - содержит классы:
-   - LemmaErrorLogger - логирование ошибок в классе LemmaFromText
-   - LemmaFromText - класс для вывода лемм из слов в тексте
    - Site - класс состоит и названия сайта и его адреса
    - SiteList - список сайтов
-   - SiteThread - создает поток один на сайт, в нем разбиение на потоки ForkJoinPool по каждой странице сайта
 2. controllers - контроллеры:
    - ApiController - основной контроллер взаимодействия с сайтом
    - DefaultController - контроллер по-умолчанию, открывает главную страницу сайта
@@ -31,27 +28,30 @@
    - indexing - ответ на инструмент в разделе Management
    - search - ответ на запрос поиска в разделе Search
    - statistics - формирование ответа на Dashboard
-4. model - сущности для базы данных
+4. lemma 
+   - LemmaFromText - класс для вывода лемм из слов в тексте
+5. logger 
+   - ExceptionLogger - логирование ошибок в классе LemmaFromText
+6. model - сущности для базы данных
    - IndexEntity - таблица Indexs
    - LemmaEntity - таблица Lemma
    - PageEntity - таблица Page
    - SiteEntity - таблица Site
    - Status - список состояния индексации сайтов
-5. repositories - jpa-репозитории
+7. repositories - jpa-репозитории
    - IndexRepository - для запросов к таблице Indexs
    - LemmaRepository - для запросов к таблице Lemma
    - PageRepository - для запросов к таблице Page
    - SiteRepository - для запросов к таблице Site
-6. services - сервисы
+8. services - сервисы
    - IndexingService - интерфейс для работы с индексацией сайтов
    - IndexingServiceImpl - содержит методы для индексации сайтов
-   - IndexsServise - методы для работы с репозиторием таблицы Indexs
-   - LemmaService - методы для работы с репозиторием таблицы Lemma
-   - PageService - методы для работы с репозиторием таблицы Page
    - SearchService - методы для поиска текста в базе данных
    - SiteService - методы для работы с репозиторием таблицы Site
    - StatisticsService - интерфейс для работы со статистикой сайтов
    - StatisticsServiceImpl - содержит методы для статистики  сайтов
-7. web - работа с парсингом сайтов
+9. threads 
+   - SiteThread - создает поток один на сайт, в нем разбиение на потоки ForkJoinPool по каждой странице сайта
+10. web - работа с парсингом сайтов
    - WebMap - возврат данных из потоков ForkJoin
    - WebParse - парсинг страницы

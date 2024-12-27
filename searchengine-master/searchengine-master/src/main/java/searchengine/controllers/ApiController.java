@@ -1,18 +1,33 @@
 package searchengine.controllers;
 
 import lombok.RequiredArgsConstructor;
+<<<<<<< HEAD
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+=======
+import org.hibernate.mapping.Map;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import searchengine.config.Site;
+>>>>>>> c50fbabb287430063d38ef8b6a33f7a3358b3beb
 import searchengine.dto.indexing.IndexingResponse;
 import searchengine.dto.search.SearchResponse;
 import searchengine.dto.statistics.StatisticsResponse;
 import searchengine.services.IndexingService;
+<<<<<<< HEAD
+=======
+import searchengine.services.IndexingServiceImpl;
+>>>>>>> c50fbabb287430063d38ef8b6a33f7a3358b3beb
 import searchengine.services.SearchService;
 import searchengine.services.StatisticsService;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+<<<<<<< HEAD
+=======
+import java.util.Optional;
+>>>>>>> c50fbabb287430063d38ef8b6a33f7a3358b3beb
 
 @RestController
 @RequiredArgsConstructor

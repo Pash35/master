@@ -3,8 +3,13 @@ package searchengine.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+<<<<<<< HEAD
 import searchengine.logger.ExceptionLogger;
 import searchengine.lemma.LemmasFromText;
+=======
+import searchengine.config.LemmaErrorLogger;
+import searchengine.config.LemmasFromText;
+>>>>>>> c50fbabb287430063d38ef8b6a33f7a3358b3beb
 import searchengine.config.Site;
 import searchengine.model.*;
 import searchengine.repositories.LemmaRepository;
@@ -22,6 +27,25 @@ public class SiteService {
     private final PageRepository pageRepository;
     private final LemmaRepository lemmaRepository;
 
+<<<<<<< HEAD
+=======
+    List<SiteEntity> findSite()  {
+        return siteRepository.findSite();
+    }
+    public SiteEntity findByUrl(String url) {
+        return siteRepository.findByUrl(url);
+    }
+
+    public void deleteByUrl(String url) {
+        siteRepository.deleteByUrl(url);
+    }
+    public Optional<SiteEntity> getById(Integer id) {
+        return siteRepository.findById(id);
+    }
+
+
+
+>>>>>>> c50fbabb287430063d38ef8b6a33f7a3358b3beb
     //Создаем запись в таблице site
     public void create(Site item) {
         SiteEntity site = new SiteEntity();
@@ -75,7 +99,11 @@ public class SiteService {
                 }
 
             } catch (IOException e) {
+<<<<<<< HEAD
                 new ExceptionLogger("Error in class SiteService");
+=======
+                new LemmaErrorLogger("Error in class SiteService");
+>>>>>>> c50fbabb287430063d38ef8b6a33f7a3358b3beb
             }
 
             pageList.add(entry.getValue());

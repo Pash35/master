@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import searchengine.config.Site;
+<<<<<<< HEAD
 import searchengine.threads.SiteThread;
 import searchengine.config.SitesList;
 import searchengine.dto.indexing.IndexingResponse;
@@ -11,6 +12,11 @@ import searchengine.repositories.IndexRepository;
 import searchengine.repositories.LemmaRepository;
 import searchengine.repositories.PageRepository;
 import searchengine.repositories.SiteRepository;
+=======
+import searchengine.config.SiteThread;
+import searchengine.config.SitesList;
+import searchengine.dto.indexing.IndexingResponse;
+>>>>>>> c50fbabb287430063d38ef8b6a33f7a3358b3beb
 
 import java.util.*;
 @Service
@@ -20,10 +26,16 @@ public class IndexingServiceImpl implements IndexingService{
 
     private final SitesList sitesList;
     private final SiteService siteService;
+<<<<<<< HEAD
     private final SiteRepository siteRepository;
     private final PageRepository pageRepository;
     private final LemmaRepository lemmaRepository;
     private final IndexRepository indexRepository;
+=======
+    private final PageService pageService;
+    private final LemmaService lemmaService;
+    private final IndexsServise indexsServise;
+>>>>>>> c50fbabb287430063d38ef8b6a33f7a3358b3beb
     private List<Thread> listThread = new ArrayList<>();
 
     @Override
@@ -48,10 +60,17 @@ public class IndexingServiceImpl implements IndexingService{
             for (Site ref : sitesList.getSites()) {
                 String tempRef = validationRef(ref.getUrl());
                 ref.setUrl(tempRef);
+<<<<<<< HEAD
                 indexRepository.deleteByUrl(tempRef);
                 pageRepository.deleteByUrl(tempRef);
                 lemmaRepository.deleteByUrl(tempRef);
                 siteRepository.deleteByUrl(tempRef);
+=======
+                indexsServise.deleteByUrl(tempRef);
+                pageService.deleteByUrl(tempRef);
+                lemmaService.deleteByUrl(tempRef);
+                siteService.deleteByUrl(tempRef);
+>>>>>>> c50fbabb287430063d38ef8b6a33f7a3358b3beb
                 siteService.create(ref);
                 SiteThread siteThread = new SiteThread(siteService);
                 siteThread.setRef(tempRef);
@@ -91,10 +110,17 @@ public class IndexingServiceImpl implements IndexingService{
 
         //проеряем есть сайт в списке
         if(site != null) {
+<<<<<<< HEAD
             indexRepository.deleteByUrl(refSite);
             pageRepository.deleteByUrl(refSite);
             lemmaRepository.deleteByUrl(refSite);
             siteRepository.deleteByUrl(refSite);
+=======
+            indexsServise.deleteByUrl(refSite);
+            pageService.deleteByUrl(refSite);
+            lemmaService.deleteByUrl(refSite);
+            siteService.deleteByUrl(refSite);
+>>>>>>> c50fbabb287430063d38ef8b6a33f7a3358b3beb
             siteService.create(site);
             SiteThread siteThread = new SiteThread(siteService);
             siteThread.setRef(refSite);
